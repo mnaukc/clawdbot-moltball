@@ -19,6 +19,7 @@ ENV PATH="/root/.bun/bin:${PATH}"
 RUN corepack enable
 
 WORKDIR /openclaw
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Pin to a known ref (tag/branch). If it doesn't exist, fall back to main.
 ARG OPENCLAW_GIT_REF=main
@@ -32,7 +33,7 @@ RUN set -eux; \
     sed -i -E 's/"openclaw"[[:space:]]*:[[:space:]]*"workspace:[^"]+"/"openclaw": "*"/g' "$f"; \
   done
 
-RUN pnpm install --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile --prod=false
 RUN pnpm build
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:install && pnpm ui:build
